@@ -112,6 +112,7 @@ class Coupons extends Component {
 
     componentDidMount() {
         this.sync()
+        console.log(this.props.account_reducer)
     }
 
     componentWillUnmount() {
@@ -127,7 +128,7 @@ class Coupons extends Component {
         }
     }
 
-    activate(event) {
+    activate(event, code) {
         let temp = this.state.coupons
         for (let i = 0; i < temp.length; i++) {
             if (temp[i]["code"] === event) {
@@ -138,6 +139,8 @@ class Coupons extends Component {
         this.setState({
             coupons: temp
         })
+        window.open(code)
+
     }
 
 
@@ -222,38 +225,36 @@ class Coupons extends Component {
                             </>
                             <div style={{ paddingBottom: "20px" }} />
                             {
-                                this.state.coupons.map((element, index) => <div key={index}>
-                                    <Card style={{ borderStyle:"dashed",borderWidth:"3px",borderColor:"#2461fb",borderRadius: "25px" }} >
-                                        <div style={{margin:"10px"}}>
-                                        <CardHeader>
-                                            <Row md="3">
-                                                <Col xs="2">
-                                                </Col>
-                                                <Col xs="8">
-                                                    {element.name}
-                                                </Col>
-                                                <Col xs="2">
-                                                    {
-                                                        element.logoprop === "svg" ?
-                                                            <img alt="icon" width={"30vh"} src={element.icon} /> :
-                                                            element.icon
-                                                    }
-                                                </Col>
-                                            </Row>
-                                        </CardHeader>
-                                        <CardBody>
-                                            {element.desc}
-                                        </CardBody>
-                                        <Button disabled={element.stat} style={{ borderRadius: "25px", background: "#2461fb", borderColor: "#2461fb" }} onClick={() => this.activate(element.code)}>
-                                            {
-                                                !element.stat ?
-                                                    "Redeem" :
-                                                    "Redeemed"
-                                            }
-                                        </Button>
-                                        </div>
-                                    </Card>
-                                </div>)
+                                this.props.account_reducer.result.data.metadata.gifts !== undefined &&
+                                <>
+                                    {
+                                        this.props.account_reducer.result.data.metadata.gifts.map((element, index) => (
+                                            <div key={index}>
+                                                <Card style={{ borderRadius: "25px" }} >
+                                                    <CardHeader>
+                                                        {element.caption}
+                                                    </CardHeader>
+                                                    <CardBody>
+                                                        <div className="image-container">
+                                                            <img style={{ borderRadius: "10px" }} alt="icon" width="100%" src={element.logo} />
+                                                            <div className="image-bottom-left" style={{ fontSize: "1.5rem", WebkitTextStroke: "0.5px black" }}>
+                                                                {element.amount + " " + element.currency}
+                                                            </div>
+                                                        </div>
+                                                    </CardBody>
+                                                    <Button disabled={element.stat} style={{ borderRadius: "25px", background: "#2461fb", borderColor: "#2461fb" }} onClick={() => this.activate(element.code, element.reference)}>
+                                                        {
+                                                            !element.stat ?
+                                                                "Redeem" :
+                                                                "Redeemed"
+                                                        }
+                                                    </Button>
+                                                </Card>
+                                                <br />
+                                            </div>
+                                        ))
+                                    }
+                                </>
                             }
                         </>
                         :

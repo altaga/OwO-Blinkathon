@@ -154,3 +154,16 @@ a:hover {
     width: 50%;
     padding: 10px;
   }
+
+  .image-container {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+  
+  /* Bottom left text */
+  .image-bottom-left {
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+  }

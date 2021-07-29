@@ -126,7 +126,7 @@ class Register extends Component {
                                                     overlays: "none",
                                                     overlays2: "block"
                                                 }, () => {
-                                                    unirest('GET', 'https://e9wzhv9k7d.execute-api.us-east-1.amazonaws.com/send-email')
+                                                    unirest('GET', 'https://b4l30828t4.execute-api.us-east-1.amazonaws.com/email')
                                                         .headers({
                                                             'email': temp["email"],
                                                             'password': temp['password']

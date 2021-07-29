@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import sol_action from "../redux/actions/asyncActions/solAction"
 import account_action from "../redux/actions/asyncActions/accountAction"
 import reactAutobind from 'react-autobind';
+import Cat from "../assets/42887bd1.png"
+
 const unirest = require('unirest');
 
 function color(inVar) {
@@ -28,6 +30,11 @@ class KidCard extends Component {
             isOpen: false,
             buttonD: true,
             inputD: false,
+            buttonC: true,
+            inputC: true,
+            max: "",
+            min: "",
+            my_color: "white",
             kid_object: {},
             starto: "",
             disFreezze: false,
@@ -42,7 +49,15 @@ class KidCard extends Component {
             request: "",
             requestName: "",
             requestAccount: "",
-            requestAmount: ""
+            requestAmount: "",
+            showTransactions: "none",
+            buttonValue: "Show",
+            cardlist: [],
+            cardImage: Cat,
+            cardMoney: "0",
+            modalCard: false ,
+            cardSelection: {},
+            cardButtonCancel: false
         }
         reactAutobind(this)
     }
@@ -95,6 +110,15 @@ class KidCard extends Component {
 
     componentDidMount() {
         this.sync()
+        let _this = this
+        unirest('GET', 'https://b4l30828t4.execute-api.us-east-1.amazonaws.com/catalog')
+            .end((res) => {
+                if (res.error) throw new Error(res.error);
+                _this.setState({
+                    cardlist: JSON.parse(res.raw_body).d
+                })
+            });
+
     }
 
     componentWillUnmount() {
@@ -138,7 +162,7 @@ class KidCard extends Component {
                         .end((res) => {
                             if (res.error) throw new Error(res.error);
                             let ___this = __this
-                            unirest('GET', 'https://e9wzhv9k7d.execute-api.us-east-1.amazonaws.com/send-email')
+                            unirest('GET', 'https://b4l30828t4.execute-api.us-east-1.amazonaws.com/email')
                                 .headers({
                                     'email': ___this.state.kid_object.data.email,
                                     'password': ___this.state.kid_object.data.metadata.password
@@ -323,7 +347,69 @@ class KidCard extends Component {
         })
     }
 
+    giveGift() {
+        this.setState({
+            buttonC: true,
+            inputC: true,
+            cardButtonCancel: true
+        })
+        let _this = this
+        unirest('GET', 'https://b4l30828t4.execute-api.us-east-1.amazonaws.com/send-card')
+            .headers({
+                'from': '14045551212',
+                'dest': '17705551234',
+                'code': this.state.cardSelection.code,
+                'amount': this.state.cardMoney
+            })
+            .end((res) => {
+                if (res.error) throw new Error(res.error);
+                let temp = JSON.parse(res.raw_body).d.list
+                let temp2 = _this.state.kid_object.data.metadata
+                temp2.gifts = []
+                temp2.gifts.push(temp[0])
+                let __this = _this
+                unirest('GET', 'https://e9wzhv9k7d.execute-api.us-east-1.amazonaws.com/update-metadata')
+                    .headers({
+                        'ewallet': _this.state.kid_object.data.id,
+                        'metadata': JSON.stringify(temp2)
+                    })
+                    .end((res) => {
+                        if (res.error) throw new Error(res.error);
+                        unirest('GET', 'https://e9wzhv9k7d.execute-api.us-east-1.amazonaws.com/transfer')
+                            .headers({
+                                'ewallets': this.props.account_reducer.result.data.id,
+                                'ewalletd': 'ewallet_e8c1df5bbe11a236239ce9d0187e118c',
+                                'swallets': '7JE9DAiLZizaAXTgXgba58KiX7RR8LedyGppwAGBEFqe',
+                                'swalletd': '12Myzarwh2XSFtp94XDhMyzaeuEMewUETBMmmgPFfz2v',
+                                'amount': this.state.cardMoney,
+                                'currency': 'USD'
+                            })
+                            .end((res) => {
+                                if (res.error) throw new Error(res.error);
+                                let ___this = __this
+                                unirest('GET', 'https://e9wzhv9k7d.execute-api.us-east-1.amazonaws.com/transaction-decide')
+                                    .headers({
+                                        'id': JSON.parse(res.raw_body).data.id,
+                                        'status': 'accept'
+                                    })
+                                    .end((res) => {
+                                        if (res.error) throw new Error(res.error);
+                                        console.log(res.raw_body);
+                                        ___this.setState({
+                                            modalCard: false,
+                                            buttonC: false,
+                                            inputC: false,
+                                            cardButtonCancel: false
+                                        }, () => {
+                                            ___this.props.account_action(___this.props.account_reducer.result.data.id)
+                                            ___this.sync()
+                                        })
+                                    });
+                            });
+                    });
+            });
 
+    }
 
     render() {
         if (this.state.kid_object.data === undefined) {
@@ -369,6 +455,102 @@ class KidCard extends Component {
         else {
             return (
                 <>
+                    <Modal isOpen={this.state.modalCard} backdrop={"static"}>
+                        <ModalHeader>
+                            Select GiftCard <div style={{ fontSize: "0.7rem" }}>powered by BlinkSky</div>
+                        </ModalHeader>
+                        <ModalBody>
+                            <Input defaultValue="Select GiftCard" type="select" onChange={(e) => {
+                                let but = true
+                                if (this.props.account_reducer.result.data.accounts[0].balance >= this.state.cardlist.find(value => value.caption === e.target.value).min_range) {
+                                    but = false
+                                }
+                                this.setState({
+                                    cardImage: this.state.cardlist.find(value => value.caption === e.target.value).logo,
+                                    max: this.state.cardlist.find(value => value.caption === e.target.value).max_range,
+                                    min: this.state.cardlist.find(value => value.caption === e.target.value).min_range,
+                                    my_color: this.state.cardlist.find(value => value.caption === e.target.value).fontcolor,
+                                    starto: this.state.cardlist.find(value => value.caption === e.target.value).min_range,
+                                    cardMoney: this.state.cardlist.find(value => value.caption === e.target.value).min_range,
+                                    inputC: false,
+                                    buttonC: but,
+                                    cardSelection: this.state.cardlist.find(value => value.caption === e.target.value)
+                                })
+                            }}>
+                                <option disabled>Select GiftCard</option>
+                                {this.state.cardlist.map((item) => {
+                                    return <option value={item.caption} key={item.caption}>{item.caption}</option>
+                                })}
+                            </Input>
+                            <hr />
+                            <div className="image-container">
+                                <img src={this.state.cardImage} alt="GiftCard" style={{ width: "100%", borderRadius: "10px" }} />
+                                <div className="image-bottom-left" style={{ color: this.state.my_color, fontSize: "1.5rem", WebkitTextStroke: "0.5px black" }}>
+                                    {this.state.cardMoney + " " + this.props.account_reducer.result.data.accounts[0].currency}
+                                </div>
+                            </div>
+                            <br />
+                            <div>
+                                <Button style={{ borderRadius: "25px" }} disabled={this.state.inputC} color="primary" className="center" onClick={() => {
+                                    this.setState({
+                                        starto: this.state.min,
+                                        cardMoney: this.state.min
+                                    })
+                                }}
+                                >
+                                    Min
+                                </Button>
+                                <Button style={{ borderRadius: "25px" }} disabled={this.state.inputC} color="primary" className="center" onClick={() => {
+                                    this.setState({
+                                        starto: this.state.max,
+                                        cardMoney: this.state.max
+                                    })
+                                }}>
+                                    Max
+                                </Button>
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Row md="2">
+                                <Col xs="6">
+                                    <Input value={this.state.starto} disabled={this.state.inputC} onChange={
+                                        (event) => {
+                                            let but = false
+                                            if (event.target.value === "" || parseFloat(event.target.value) < 0 || parseFloat(event.target.value) > this.props.account_reducer.result.data.accounts[0].balance || parseFloat(event.target.value) < this.state.min || parseFloat(event.target.value) > this.state.max) {
+                                                but = true
+                                            }
+                                            this.setState({
+                                                starto: event.target.value,
+                                                buttonC: but,
+                                                cardMoney: event.target.value
+                                            })
+                                        }
+                                    } type="number" name="money" id="credit" placeholder={"" + this.props.account_reducer.result.data.accounts[0].balance + " " + this.props.account_reducer.result.data.accounts[0].currency} />
+                                </Col>
+                                <Col xs="6">
+                                    <Row>
+                                        <Col xs="6">
+                                            <Button style={{ borderRadius: "25px" }} color="primary" disabled={this.state.buttonC} onClick={this.giveGift}>
+                                                Give
+                                            </Button>
+                                        </Col>
+                                        <Col xs="6">
+                                            <Button
+                                                disabled={this.state.cardButtonCancel}
+                                                style={{ borderRadius: "25px" }} onClick={() => {
+                                                    this.setState({
+                                                        modalCard: false
+                                                    })
+                                                }
+                                                }>
+                                                Cancel
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </ModalFooter>
+                    </Modal>
                     <Modal isOpen={this.state.request} backdrop={"static"}>
                         <ModalHeader>{this.state.requestName} has requested</ModalHeader>
                         <ModalBody style={{ fontSize: "1.5rem" }}>
@@ -434,7 +616,7 @@ class KidCard extends Component {
                         </ModalBody>
                         <ModalFooter>
                             <Button disabled={this.state.modalButton1} style={{ borderRadius: "25px", background: "#2461fb", borderColor: "#2461fb", color: "white" }} onClick={this.addToAccount}>Confirm</Button>
-                            <Button disabled={this.state.modalButton2} color="secondary" onClick={
+                            <Button style={{ borderRadius: "25px" }} disabled={this.state.modalButton2} color="secondary" onClick={
                                 () => {
                                     this.setState({
                                         modalConfirm: false,
@@ -459,11 +641,11 @@ class KidCard extends Component {
                         </div>
                         <CardBody hidden={!this.state.isOpen}>
                             <Collapse isOpen={this.state.isOpen}>
-                                <Row md="2">
-                                    <Col xs="6">
+                                <Row md="3">
+                                    <Col xs="4">
                                         Ewallet:
                                     </Col>
-                                    <Col xs="6">
+                                    <Col xs="4">
                                         {
                                             this.state.kid_object.data.accounts[0].balance
                                         }
@@ -472,23 +654,43 @@ class KidCard extends Component {
                                             this.state.kid_object.data.accounts[0].currency
                                         }
                                     </Col>
+                                    <Col xs="4">
+                                        <Button style={{ borderRadius: "25px" }} outline color="primary" onClick={() => {
+                                            if (this.state.showTransactions === "none") {
+                                                this.setState({
+                                                    showTransactions: "block",
+                                                    buttonValue: "Hide"
+                                                })
+                                            }
+                                            else {
+                                                this.setState({
+                                                    showTransactions: "none",
+                                                    buttonValue: "Show"
+                                                })
+                                            }
+                                        }}>
+                                            {this.state.buttonValue}
+                                        </Button>
+                                    </Col>
                                 </Row>
                                 <hr />
-                                <CardHeader>
-                                    Transactions:
-                                </CardHeader>
-                                {
-                                    (this.state.transactions !== undefined) &&
-                                    <>
-                                        {
-                                            (this.state.transactions.data !== undefined) ? <Transactions transactions={this.state.transactions.data} /> :
-                                                <>
-                                                    Unfreeze to view transactions or transfer money
-                                                    <hr />
-                                                </>
-                                        }
-                                    </>
-                                }
+                                <div style={{ display: this.state.showTransactions }}>
+                                    <CardHeader>
+                                        Transactions:
+                                    </CardHeader>
+                                    {
+                                        (this.state.transactions !== undefined) &&
+                                        <>
+                                            {
+                                                (this.state.transactions.data !== undefined) ? <Transactions transactions={this.state.transactions.data} /> :
+                                                    <>
+                                                        Unfreeze to view transactions or transfer money
+                                                        <hr />
+                                                    </>
+                                            }
+                                        </>
+                                    }
+                                </div>
 
                                 <CardBody>
                                     <Row>
@@ -555,6 +757,21 @@ class KidCard extends Component {
                                             } type="select" name="select" id="currency">
                                                 <option>{this.props.account_reducer.result.data.accounts[0].currency}</option>
                                             </Input>
+                                        </Col>
+                                    </Row>
+                                </CardBody>
+                                <hr />
+                                <CardBody>
+                                    <Row>
+                                        <Col>
+                                            <Button style={{ borderRadius: "25px" }} color="primary" onClick={() => {
+                                                this.setState({
+                                                    modalCard: true
+                                                })
+                                            }
+                                            }>
+                                                Give GiftCard
+                                            </Button>
                                         </Col>
                                     </Row>
                                 </CardBody>
