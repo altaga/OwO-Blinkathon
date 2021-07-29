@@ -148,6 +148,10 @@ Todas las tarjetas que le demos a la cuenta hijo, apareceran en esta tab, en est
 <img src="./Images/blink6.jpg" width="220px">
 <img src="./Images/blink7.jpg" width="220px">
 
+Podemos ver que las tarjetas que mandamos mediante la plataforma aparecen en nuestra Digital Dashboard de BlinkSky.
+
+<img src="./Images/dashboard.png">
+
 ## Email:
 
 In this case, in order to give the user a better experience, we add the function of sending a welcome email with their passwords to users who register.
