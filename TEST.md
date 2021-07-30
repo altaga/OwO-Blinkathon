@@ -57,15 +57,15 @@ Pass: toor
 
 <img src="./Images/test3.jpg" width="220px">
 
-- Como nuestro hijo a ahorrado su dinero le daremos una GiftCard 
+- As our child has saved money we will give him a GiftCard
   
 <img src="./Images/test2.jpg" width="220px">
 
-- Seleccionemos una de amazon para que pida ese control nuevo que tanto queria.
+- Let's select one from amazon to ask for that new control that was wanted so much.
 
 <img src="./Images/test1.jpg" width="220px">
 
-- Si vemos en las trasacciones podremos ver que ya cobraron la tarjeta de nuestro saldo.
+- If we look at the transactions we can see that the card has already been charged from our balance.
  
 <img src="./Images/test5-5.jpg" width="220px">
 
@@ -81,10 +81,10 @@ Pass: toor
 
 <img src="./Images/gs10.jpg" width="220px">
 
-- Ahora en la pestaña de rewards podremos ver la tarjeta que le dimos a nuestro hijo.
+- Now in the rewards tab we can see the card that we gave to our child.
 
 <img src="./Images/test6.jpg" width="220px">
 
-- Si le damos clic podemos ver que es una tarjeta real (sandbox) de blinksky.
+- If we click on it we can see that it is a real blinksky card (sandbox).
 
 <img src="./Images/test7.jpg" width="220px">
