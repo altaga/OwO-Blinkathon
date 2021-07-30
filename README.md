@@ -1,6 +1,6 @@
 # OwO-Blinkathon
 
- [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [<img src="https://img.shields.io/badge/View-Website-blue">](https://main.d1v7l1x8vxa5jf.amplifyapp.com/) [<img src="https://img.shields.io/badge/View-Video-red">](https://www.youtube.com/watch?v=sUAdnfDavvE)
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [<img src="https://img.shields.io/badge/View-Website-blue">](https://main.d1v7l1x8vxa5jf.amplifyapp.com/) [<img src="https://img.shields.io/badge/View-Video-red">](https://youtu.be/VCwTtG5JPBU)
 
 <img src="https://i.ibb.co/sbrTvhD/Render2.gif" width=500>
 
