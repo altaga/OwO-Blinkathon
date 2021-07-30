@@ -66,7 +66,7 @@ There is seldom any Fintech, banking solution or project willing to look at this
 
 ## **Backend**:
 
-Para la aplicacion se decidio basar toda la gestion de gift cards a BlinkSky gracias a que su implementacion fue bastante rapida en nuestra app utilizando los servicios de AWS.
+For the application it was decided to base all the management of gift cards on BlinkSky thanks to the fact that its implementation was quite fast in our app using AWS services.
 
 <img src="./Images/diagram.png">
 
@@ -108,24 +108,24 @@ To transfer Solana to the wallet the following model is used.
 
 ## **Parent - Kids**:
 
-Esta tab tiene implementadas las API's de BlinkSky para poder mandar GiftCards como recompensas a el hijo, en este caso la lista de tarjetas disponibles esta actualizada en tiempo real con la API de BlinkSky.
+This tab has the BlinkSky APIs implemented to be able to send GiftCards as rewards to the child, in this case the list of available cards is updated in real time with the BlinkSky API.
 
 <img src="./Images/blink2.jpg" width="220px">
 
-Al presionar el boton de dar giftcard podremos ver como nos despliega un menu para poder seleccionar todas las opciones de la tarjeta.
+By pressing the  give giftcard button we will be able to see how a menu is displayed that makes it possible to select all the options of the card.
 
 <img src="./Images/uipart.png" width="220px">
 
-Podemos seleccionar la tarjeta ideal, el catalogo es descargado directamente de la API de BlinkSky.
+We can select our preferred card, the catalog is downloaded directly from the BlinkSky API.
 
 <img src="./Images/blink1.jpg" width="220px">
 <img src="./Images/blink3.jpg" width="220px">
 
-Cada tarjeta tiene un valor minimo y uno maximo, estos estan pre configurados en los botones de Min y Max.
+Each card has a minimum and a maximum value, these are pre-configured with the Min and Max buttons.
 
 <img src="./Images/blink4.jpg" width="220px">
 
-Por ultimo al presionar el boton de Give, la aparecera en la cuenta del hijo.
+Finally, when I press the "give" button, it appears in the Child's account.
 
 [Kid-Rewards](#kid---rewards-page)
 
@@ -143,12 +143,12 @@ This tab is very similar to the father's, the only difference is that the boy ca
 
 ## **Kid - Rewards Page**:
 
-Todas las tarjetas que le demos a la cuenta hijo, apareceran en esta tab, en este caso podemos ver la master card que mostramos en la seccion [Parent-Kids](#parent---kids)
+All the cards that we give to the child account will appear in this tab, in this case we can see the master card that we show in the section [Parent-Kids](#parent---kids)
 
 <img src="./Images/blink6.jpg" width="220px">
 <img src="./Images/blink7.jpg" width="220px">
 
-Podemos ver que las tarjetas que mandamos mediante la plataforma aparecen en nuestra Digital Dashboard de BlinkSky.
+We can see that the cards we send through the platform appear in our BlinkSky Digital Dashboard.
 
 <img src="./Images/dashboard.png">
 
